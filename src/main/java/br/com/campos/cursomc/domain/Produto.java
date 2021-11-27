@@ -51,10 +51,10 @@ public class Produto implements Serializable {
 	    joinColumns = @JoinColumn(name = "produto_id"), 
 	    inverseJoinColumns = @JoinColumn(name = "categoria_id")
 	)
-	private List<Categoria> categorias = new ArrayList<>();
+	private List<Categoria> categorias;
 
 	public Produto() {
-
+		this.categorias = new ArrayList<>();
 	}
 
 	public Produto(Integer id, String nome, Double preco) {
