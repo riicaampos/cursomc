@@ -1,7 +1,9 @@
 package br.com.campos.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -14,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.campos.cursomc.domain.enums.TipoCliente;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,9 +53,13 @@ public class Cliente implements Serializable{
 	@CollectionTable(name = "telefone")
 	private Set<String> telefones;
 	
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos;
+	
 	public Cliente() {
 		this.enderecos = new HashSet<>();
 		this.telefones = new HashSet<>();
+		this.pedidos = new ArrayList<>();
 	}
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {

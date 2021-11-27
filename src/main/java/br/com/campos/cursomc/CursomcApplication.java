@@ -1,5 +1,6 @@
 package br.com.campos.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -13,8 +14,9 @@ import br.com.campos.cursomc.domain.Cidade;
 import br.com.campos.cursomc.domain.Cliente;
 import br.com.campos.cursomc.domain.Endereco;
 import br.com.campos.cursomc.domain.Estado;
+import br.com.campos.cursomc.domain.Pedido;
 import br.com.campos.cursomc.domain.Produto;
-import br.com.campos.cursomc.domain.TipoCliente;
+import br.com.campos.cursomc.domain.enums.TipoCliente;
 import br.com.campos.cursomc.repository.CategoriaRepository;
 import br.com.campos.cursomc.repository.CidadeRepository;
 import br.com.campos.cursomc.repository.ClienteRepository;
@@ -51,6 +53,8 @@ public class CursomcApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
 		
@@ -86,9 +90,23 @@ public class CursomcApplication implements CommandLineRunner {
         telefones.add("1938851574");
         cli1.setTelefones(telefones);
         
+        Cliente cli2 = new Cliente(null,"Adriana de Campos","dri_grace@gmail.com","43089772147",TipoCliente.PESSOAFISICA);
+        HashSet<String> telefones2 = new HashSet<>();
+        HashSet<Endereco> enderecos2 = new HashSet<>();
+        telefones.add("19991125944");
+        telefones.add("1938853466");
+        cli2.setTelefones(telefones2);
+        
         Endereco end = new Endereco(null,"Luis Forner",119,"s/n","Vila Rubens","13335170",cli1,c1);
         enderecos.add(end);
         cli1.setEnderecos(enderecos);
+        
+        Endereco end2 = new Endereco(null,"Agostinho Cação",57,"Próximo ao posto de Saúde","Jardim Itamaracá","13335590",cli1,c1);
+        enderecos.add(end);
+        cli2.setEnderecos(enderecos2);
+        
+        Pedido ped1 = new Pedido(null, sdf.parse("24/09/1991 09:30"), cli1, end);
+        Pedido ped2 = new Pedido(null, sdf.parse(""), cli2, end2);
         
         cliRepo.save(cli1);
         endRepo.save(end);
