@@ -20,13 +20,13 @@ import lombok.Setter;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @EqualsAndHashCode(of="id")
-public class Pagamento implements Serializable{
+public abstract class Pagamento implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private Integer id;
-    private EstadoPagamento estado;
+    private Integer estado;
     
     /**
      * @MapsId garante que o id dessa entidade vai ser o mesmo id da entidade relacionada
@@ -43,8 +43,16 @@ public class Pagamento implements Serializable{
 	public Pagamento(Integer id, EstadoPagamento estado, Pedido pedido) {
 		super();
 		this.id = id;
-		this.estado = estado;
+		this.estado = estado.getId();
 		this.pedido = pedido;
+	}
+	
+	public EstadoPagamento getEstado() {
+		return EstadoPagamento.findEstado(this.estado);
+	}
+	
+	public void setEstado(EstadoPagamento estado) {
+		this.estado = estado.getId();
 	}
     
     

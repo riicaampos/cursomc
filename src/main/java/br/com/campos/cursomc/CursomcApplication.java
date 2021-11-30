@@ -14,14 +14,20 @@ import br.com.campos.cursomc.domain.Cidade;
 import br.com.campos.cursomc.domain.Cliente;
 import br.com.campos.cursomc.domain.Endereco;
 import br.com.campos.cursomc.domain.Estado;
+import br.com.campos.cursomc.domain.Pagamento;
+import br.com.campos.cursomc.domain.PagamentoBoleto;
+import br.com.campos.cursomc.domain.PagamentoCartao;
 import br.com.campos.cursomc.domain.Pedido;
 import br.com.campos.cursomc.domain.Produto;
+import br.com.campos.cursomc.domain.enums.EstadoPagamento;
 import br.com.campos.cursomc.domain.enums.TipoCliente;
 import br.com.campos.cursomc.repository.CategoriaRepository;
 import br.com.campos.cursomc.repository.CidadeRepository;
 import br.com.campos.cursomc.repository.ClienteRepository;
 import br.com.campos.cursomc.repository.EnderecoRepository;
 import br.com.campos.cursomc.repository.EstadoRepository;
+import br.com.campos.cursomc.repository.PagamentoRepository;
+import br.com.campos.cursomc.repository.PedidoRepository;
 import br.com.campos.cursomc.repository.ProdutoRepository;
 
 @SpringBootApplication
@@ -44,6 +50,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private EnderecoRepository endRepo;
+	
+	@Autowired
+	private PedidoRepository pedRepo;
+	
+	@Autowired
+	private PagamentoRepository pgtoRepo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -106,10 +118,22 @@ public class CursomcApplication implements CommandLineRunner {
         cli2.setEnderecos(enderecos2);
         
         Pedido ped1 = new Pedido(null, sdf.parse("24/09/1991 09:30"), cli1, end);
-        Pedido ped2 = new Pedido(null, sdf.parse(""), cli2, end2);
+        Pedido ped2 = new Pedido(null, sdf.parse("30/11/2021 10:17"), cli1, end2);
         
+        Pagamento pgto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+        ped1.setPagamento(pgto1);
+        
+        Pagamento pgto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("30/11/2021 10:20"),null);
+        ped2.setPagamento(pgto2);
+        
+        cli1.setPedidos(Arrays.asList(ped1,ped2));
+           
         cliRepo.save(cli1);
         endRepo.save(end);
+        pedRepo.saveAll(Arrays.asList(ped1,ped2));
+        pgtoRepo.saveAll(Arrays.asList(pgto1,pgto2));
+
+
         
 
 			
