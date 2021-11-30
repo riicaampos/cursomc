@@ -1,4 +1,4 @@
-package br.com.campos.cursomc.domain;
+package br.com.campos.cursomc.domain.enums;
 
 import lombok.Getter;
 

@@ -1,5 +1,6 @@
 package br.com.campos.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -13,13 +14,20 @@ import br.com.campos.cursomc.domain.Cidade;
 import br.com.campos.cursomc.domain.Cliente;
 import br.com.campos.cursomc.domain.Endereco;
 import br.com.campos.cursomc.domain.Estado;
+import br.com.campos.cursomc.domain.Pagamento;
+import br.com.campos.cursomc.domain.PagamentoBoleto;
+import br.com.campos.cursomc.domain.PagamentoCartao;
+import br.com.campos.cursomc.domain.Pedido;
 import br.com.campos.cursomc.domain.Produto;
-import br.com.campos.cursomc.domain.TipoCliente;
+import br.com.campos.cursomc.domain.enums.EstadoPagamento;
+import br.com.campos.cursomc.domain.enums.TipoCliente;
 import br.com.campos.cursomc.repository.CategoriaRepository;
 import br.com.campos.cursomc.repository.CidadeRepository;
 import br.com.campos.cursomc.repository.ClienteRepository;
 import br.com.campos.cursomc.repository.EnderecoRepository;
 import br.com.campos.cursomc.repository.EstadoRepository;
+import br.com.campos.cursomc.repository.PagamentoRepository;
+import br.com.campos.cursomc.repository.PedidoRepository;
 import br.com.campos.cursomc.repository.ProdutoRepository;
 
 @SpringBootApplication
@@ -43,6 +51,12 @@ public class CursomcApplication implements CommandLineRunner {
 	@Autowired
 	private EnderecoRepository endRepo;
 	
+	@Autowired
+	private PedidoRepository pedRepo;
+	
+	@Autowired
+	private PagamentoRepository pgtoRepo;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
@@ -50,6 +64,8 @@ public class CursomcApplication implements CommandLineRunner {
 	// Executa o que está dentro do metodo quando a aplicação é iniciada
 	@Override
 	public void run(String... args) throws Exception {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
@@ -86,12 +102,38 @@ public class CursomcApplication implements CommandLineRunner {
         telefones.add("1938851574");
         cli1.setTelefones(telefones);
         
+        Cliente cli2 = new Cliente(null,"Adriana de Campos","dri_grace@gmail.com","43089772147",TipoCliente.PESSOAFISICA);
+        HashSet<String> telefones2 = new HashSet<>();
+        HashSet<Endereco> enderecos2 = new HashSet<>();
+        telefones.add("19991125944");
+        telefones.add("1938853466");
+        cli2.setTelefones(telefones2);
+        
         Endereco end = new Endereco(null,"Luis Forner",119,"s/n","Vila Rubens","13335170",cli1,c1);
         enderecos.add(end);
         cli1.setEnderecos(enderecos);
         
+        Endereco end2 = new Endereco(null,"Agostinho Cação",57,"Próximo ao posto de Saúde","Jardim Itamaracá","13335590",cli1,c1);
+        enderecos.add(end);
+        cli2.setEnderecos(enderecos2);
+        
+        Pedido ped1 = new Pedido(null, sdf.parse("24/09/1991 09:30"), cli1, end);
+        Pedido ped2 = new Pedido(null, sdf.parse("30/11/2021 10:17"), cli1, end2);
+        
+        Pagamento pgto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+        ped1.setPagamento(pgto1);
+        
+        Pagamento pgto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("30/11/2021 10:20"),null);
+        ped2.setPagamento(pgto2);
+        
+        cli1.setPedidos(Arrays.asList(ped1,ped2));
+           
         cliRepo.save(cli1);
         endRepo.save(end);
+        pedRepo.saveAll(Arrays.asList(ped1,ped2));
+        pgtoRepo.saveAll(Arrays.asList(pgto1,pgto2));
+
+
         
 
 			
