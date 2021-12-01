@@ -15,7 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.campos.cursomc.domain.enums.TipoCliente;
 import lombok.EqualsAndHashCode;
@@ -38,11 +38,7 @@ public class Cliente implements Serializable{
 	private String cpfOuCnpj;
 	private Integer tipo;
 	
-	/**
-	 * Para evitar o Json ciclico, coloque @JsonManagedReference do lado que você quer que
-	 * exiba a lista e do outro lado @JsonBackReference
-	 */
-	@JsonManagedReference
+	
 	@OneToMany(mappedBy = "cliente")
 	private Set<Endereco> enderecos;
 	
@@ -54,6 +50,8 @@ public class Cliente implements Serializable{
 	@CollectionTable(name = "telefone")
 	private Set<String> telefones;
 	
+
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
 	private List<Pedido> pedidos;
 	

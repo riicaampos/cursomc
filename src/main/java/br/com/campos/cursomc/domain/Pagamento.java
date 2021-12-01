@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.campos.cursomc.domain.enums.EstadoPagamento;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,6 +33,8 @@ public abstract class Pagamento implements Serializable{
     /**
      * @MapsId garante que o id dessa entidade vai ser o mesmo id da entidade relacionada
      */
+    
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "pedido_id")
     @MapsId

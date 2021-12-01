@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +36,7 @@ public class Pedido implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@JsonFormat(pattern = "dd/MM/yyy HH:mm")
 	private Date instante;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -47,6 +50,7 @@ public class Pedido implements Serializable {
 	/**
 	 * Necessario usar o cascade para evitar o erro de entidade transiente
 	 */
+	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
 	

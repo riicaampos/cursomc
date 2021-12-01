@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,7 +51,7 @@ public class Produto implements Serializable {
 	 * for consultado os produtos, não será retornado as categorias
 	 */
 	
-	@JsonBackReference
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA", 
 	    joinColumns = @JoinColumn(name = "produto_id"), 
@@ -59,6 +59,7 @@ public class Produto implements Serializable {
 	)
 	private List<Categoria> categorias;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "id.produto")
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<ItemPedido> itens;
@@ -76,6 +77,11 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 	
+	/**
+	 * Tudo que começa com get... automaticamente é serializado
+	 * então é necessário usar @JsonIgnore
+	 */
+	@JsonIgnore
 	public List<Pedido> getPedidos(){
 		List<Pedido> peds = new ArrayList<>();
 		for(ItemPedido i : itens) {

@@ -38,5 +38,9 @@ public class CategoriaService implements BasicCrudService<Categoria, Integer>{
 	public List<Categoria> findAll() {
       return repo.findAll();
 	}
+	
+	public Categoria insert(Categoria c) {
+		return repo.save(c);
+	}
 
 }
