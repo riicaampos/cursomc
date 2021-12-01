@@ -14,6 +14,8 @@ import br.com.campos.cursomc.domain.Cidade;
 import br.com.campos.cursomc.domain.Cliente;
 import br.com.campos.cursomc.domain.Endereco;
 import br.com.campos.cursomc.domain.Estado;
+import br.com.campos.cursomc.domain.ItemPedido;
+import br.com.campos.cursomc.domain.ItemPedidoPK;
 import br.com.campos.cursomc.domain.Pagamento;
 import br.com.campos.cursomc.domain.PagamentoBoleto;
 import br.com.campos.cursomc.domain.PagamentoCartao;
@@ -26,6 +28,7 @@ import br.com.campos.cursomc.repository.CidadeRepository;
 import br.com.campos.cursomc.repository.ClienteRepository;
 import br.com.campos.cursomc.repository.EnderecoRepository;
 import br.com.campos.cursomc.repository.EstadoRepository;
+import br.com.campos.cursomc.repository.ItemPedidoRepository;
 import br.com.campos.cursomc.repository.PagamentoRepository;
 import br.com.campos.cursomc.repository.PedidoRepository;
 import br.com.campos.cursomc.repository.ProdutoRepository;
@@ -56,6 +59,9 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pgtoRepo;
+
+	@Autowired
+	private ItemPedidoRepository itemPedRepo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -127,11 +133,27 @@ public class CursomcApplication implements CommandLineRunner {
         ped2.setPagamento(pgto2);
         
         cli1.setPedidos(Arrays.asList(ped1,ped2));
+        
+        ItemPedidoPK pk1 = new ItemPedidoPK();
+        pk1.setPedido(ped1);
+        pk1.setProduto(p3);
+        
+        ItemPedido ip1 = new ItemPedido(p1, ped1, 0.00, 1, 2000.00);
+        ItemPedido ip2 = new ItemPedido(p3, ped1, 0.00, 2, 80.00);
+        ItemPedido ip3 = new ItemPedido(p2, ped2, 100.00, 1, 800.00);
+        
+        ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+        ped2.getItens().addAll(Arrays.asList(ip3));
+        
+        p1.getItens().addAll(Arrays.asList(ip1));
+        p2.getItens().addAll(Arrays.asList(ip3));
+        p3.getItens().addAll(Arrays.asList(ip2));
            
-        cliRepo.save(cli1);
-        endRepo.save(end);
+        cliRepo.saveAll(Arrays.asList(cli1,cli2));
+        endRepo.saveAll(Arrays.asList(end,end2));
         pedRepo.saveAll(Arrays.asList(ped1,ped2));
         pgtoRepo.saveAll(Arrays.asList(pgto1,pgto2));
+        itemPedRepo.saveAll(Arrays.asList(ip1,ip2,ip3));
 
 
         
